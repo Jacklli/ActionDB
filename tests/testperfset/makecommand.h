@@ -1,0 +1,1 @@
+char *makeCommand(char *command);

@@ -1,1 +1,2 @@
-ActoinDB is a nosql database based on Action framework and rocksDB.
+In "Action" project, 
+    return 1 stands for ok, return -1 stands for error.
