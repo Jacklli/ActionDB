@@ -1,4 +1,4 @@
-CFLAGS += -g -I ../net/ -I ../db/ -I ../log/ -I ../ -I ../log/ -I ../rocksdb-1.5.7/
+CFLAGS += -g -I ../net/ -I ../db/ -I ../log/ -I ../ -I ../log/ -I ../rocksdb-3.9/include/rocksdb/
 test_rbtree.o: ../net/rbtree.h ../net/rbtree.c test_rbtree.c
 	gcc $(CFLAGS) -o test_rbtree.o ../net/rbtree.c test_rbtree.c
 test_aepolltimer.o: test_aepolltimer.c ../log/log.h ../net/event.h ../net/event.c ../net/aepoll.h ../net/aepoll.c ../net/timer.h ./timer.c
