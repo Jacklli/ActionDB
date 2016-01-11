@@ -1,2 +1,1 @@
-In "Action" project, 
-    return 1 stands for ok, return -1 stands for error.
+ActionDB is a nosql db based on Action net framework and rocksDB.
