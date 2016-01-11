@@ -8,7 +8,7 @@ testperf.o: testperf.c
 	gcc $(CFLAGS) -g -o testperf.o testperf.c -lpthread
 testlog.o: ../log/log.c ../log/log.h testlog.c
 	gcc $(CFLAGS) -g -o testlog.o ../log/log.c testlog.c
-simple_example: simple_example.cc
-	g++  simple_example.cc -osimple_example ../rocksdb-3.9/librocksdb.a -I../include -O2 -std=c++11 -lpthread -lrt -lsnappy -lgflags -lz -lbz2 -std=c++11  -DROCKSDB_PLATFORM_POSIX  -DOS_LINUX -fno-builtin-memcmp -DROCKSDB_FALLOCATE_PRESENT -DSNAPPY -DGFLAGS=google -DZLIB -DBZIP2
+rocksdbexample: rocksdbexample.cc
+	g++ rocksdbexample.cc -o rocksdbexample ../rocksdb-3.9/librocksdb.a -I../include -O2 -std=c++11 -lpthread -lrt -lsnappy -lgflags -lz -lbz2 -std=c++11  -DROCKSDB_PLATFORM_POSIX  -DOS_LINUX -fno-builtin-memcmp -DROCKSDB_FALLOCATE_PRESENT -DSNAPPY -DGFLAGS=google -DZLIB -DBZIP2
 clean:
-	rm -rf *.o simple_example
+	rm -rf *.o rocksdbexample
