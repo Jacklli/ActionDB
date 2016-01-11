@@ -14,10 +14,10 @@
 
 #include "server.h"
 
-void *acceptThread();
-void *workThread();
-void *cronThread();
-void *runworkThread();
+void *acceptThread(void *);
+void *workThread(void *);
+void *cronThread(void *);
+void *runworkThread(void *);
 
 
 #endif

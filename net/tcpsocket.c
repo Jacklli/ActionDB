@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include "aepoll.h"
 #include "tcpsocket.h"
 #include "conn.h"
 #include "execcommand.h"
@@ -56,7 +57,7 @@ static int tcpRead(conn *connection, int fd, buffer *buf) {
             return -1;
         }
         connection->commandCnt = connection->decod(connection->buf);
-        connection->db = db[atoi(connection->buf->argv[1])%THREADCNT];
+//        connection->db = db[atoi(connection->buf->argv[1])%THREADCNT];
         while(connection->buf->parseFlag != 1 && connection->buf->parseFlag != -1) {     
             if(connection->buf->argv[0] && strcmp(connection->buf->argv[0], "set") ==0 ) {
                 execSetCommand(connection->buf->argv);
@@ -64,17 +65,21 @@ static int tcpRead(conn *connection, int fd, buffer *buf) {
             }
             else if(connection->buf->argv[0] && strcmp(connection->buf->argv[0], "get") == 0) {
                 obj = execGetCommand(connection->buf->argv);
+/*
                 if(obj && obj->ptr)
                     replay(obj->ptr, fd);
                 else
                     replay("not found.\n", fd);
+*/
             }
             else if(connection->buf->argv[0] && strcmp(connection->buf->argv[0], "shutdown") == 0) {
                 int i = 0;
                 for(i = 0;i < THREADCNT; i++) {
+/*
                     if(db[i]) {
                         execShutdownCommand(db[i]);
                     }
+*/
                 }
             }
             connection->commandCnt = connection->decod(connection->buf);
@@ -87,7 +92,7 @@ int tcpReadCallback(connTree *tree, eventLoop *eLoop, int fd, int mask) {
     int readlen = 0;
     rb_node_t *node = NULL;
     if(!(node = rb_search(fd, tree->root))) return -1;
-    connection = node->data;
+    connection = (conn *)node->data;
     if((readlen = tcpRead(connection, fd, connection->buf)) == 0) {
         deleteFileEvent(eLoop, fd, mask);
         freeConn(fd, tree);

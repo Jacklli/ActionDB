@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <unistd.h>
 #include "buffer.h"
 #include "event.h"
 #include "aepoll.h"
@@ -71,7 +72,7 @@ int mainLoop(Server *server) {
     return 1;
 }
 
-void *runworkThread() {
+void *runworkThread(void *tmp) {
     Server *server = NULL;
     if(!(server = initworkThread())) {
         printf("initworkThread error!\n");
@@ -79,7 +80,7 @@ void *runworkThread() {
     if(mainLoop(server) != 1);
 }
 
-void *cronThread() {
+void *cronThread(void *tmp) {
     int i = 0, keys = 0;
     while(1) {
 /*
@@ -90,7 +91,7 @@ void *cronThread() {
     }
 }
 
-void *acceptThread() {
+void *acceptThread(void *tmp) {
     int i = 0;
     size_t size = 0;
     eventLoop *acceptEloop = createEventLoop();

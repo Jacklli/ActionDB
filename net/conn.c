@@ -9,17 +9,20 @@
 */
 
 #include <string.h>
+#include <unistd.h>
 #include <pthread.h>
 #include "codec.h"
 #include "rbtree.h"
 #include "conn.h"
 #include "buffer.h"
 #include "server.h"
+#include "log.h"
 
-int replay(char *buf, int fd) {
+int replay(const char *buf, int fd) {
     int len = 0;
+    int ret = -2;
     if((len = strlen(buf)) != 0)
-        write(fd, buf, len);
+        ret = write(fd, buf, len);
     return 1;
 }
 
@@ -74,7 +77,7 @@ int freeConn(int fd, connTree *tree) {
     rb_node_t *nd = NULL;
     conn *connection = NULL;
     if(tree->connCnt > 0 && (nd = rb_search(fd, tree->root))) {
-        connection = nd->data;
+        connection = (conn *)nd->data;
         if(!connection) {
             printf("free connection error!\n");
             return -1;

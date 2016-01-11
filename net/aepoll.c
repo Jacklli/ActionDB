@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
+#include <unistd.h>
 #include "aepoll.h"
 
 int aePollCreate(eventLoop *eLoop) {
@@ -34,20 +35,20 @@ int aePollCreate(eventLoop *eLoop) {
     return 1;
 }
 int aePollFree(eventLoop *eLoop) {
-    aePoll *state = eLoop->apidata;
+    aePoll *state = (aePoll *)eLoop->apidata;
     close(state->epfd);
     free(state->events);
     free(state);
 }
 int aePollResize(eventLoop *eLoop, int setsize) {
-    aePoll *state = eLoop->apidata;
-    state->events = realloc(state->events, sizeof(struct epoll_event)*setsize);
+    aePoll *state = (aePoll *)eLoop->apidata;
+    state->events = (struct epoll_event *)realloc(state->events, sizeof(struct epoll_event)*setsize);
     if(state->events)
         return -1;
     return 1;
 }
 int aePollAddEvent(eventLoop *eLoop, int fd, int mask) {
-    aePoll *state = eLoop->apidata;
+    aePoll *state = (aePoll *)eLoop->apidata;
     struct epoll_event ee;
     /* If the fd was already monitored for some event, we need a MOD
      * operation. Otherwise we need an ADD operation. */
@@ -65,7 +66,7 @@ int aePollAddEvent(eventLoop *eLoop, int fd, int mask) {
     return 1;
 }
 int aePollDeleteEvent(eventLoop *eLoop, int fd, int delmask) {
-    aePoll *state = eLoop->apidata;
+    aePoll *state = (aePoll *)eLoop->apidata;
     struct epoll_event ee;
     int mask = eLoop->fEvents[fd].mask & (~delmask);
 
@@ -83,7 +84,7 @@ int aePollDeleteEvent(eventLoop *eLoop, int fd, int delmask) {
     }
 }
 int aePollPoll(eventLoop *eLoop, struct timeval *tm) {
-    aePoll *state = eLoop->apidata;
+    aePoll *state = (aePoll *)eLoop->apidata;
     int retval = 0, numevents = 0;
 
     retval = epoll_wait(state->epfd,state->events,eLoop->setsize,tm ? (tm->tv_sec*1000 + tm->tv_usec/1000) : -1);

@@ -51,6 +51,54 @@ int repairLastCorruptMessage(buffer *buf, int corruptMessagelen) {
     return 1;
 }
 
+int parseOneMessage(buffer *buf) {
+    int argLen = 0, preArgLen = 0;
+    int separLen = 0;
+    int argCnt = 0;
+
+    buf->argBeginpos = buf->cursor;
+    while(buf->parsedLen != buf->readDatalen && buf->cursor) {
+        if((*buf->cursor == '\t') && argLen == 0) {
+            buf->cursor++;
+            preArgLen++;
+        }
+        else if((*buf->cursor == '\t') && argLen != 0) {
+            buf->argBeginpos += (preArgLen + separLen);
+            buf->parsedLen += (preArgLen + separLen);
+            memset(buf->argv[argCnt], '\0', ARGUMENTCNT);
+            memcpy(buf->argv[argCnt], buf->argBeginpos, argLen);
+            buf->cursor++; 
+            preArgLen = argLen;
+            argLen = 0;
+            separLen = 1;
+            argCnt++;
+            if(argCnt > 3) {
+                buf->parseFlag = -1;
+                break;
+            }
+        }
+        else if(*buf->cursor == '!') {
+            buf->argBeginpos += (preArgLen + separLen);
+            buf->parsedLen += (preArgLen + separLen);
+            memcpy(buf->argv[argCnt], buf->argBeginpos, argLen);
+            argCnt++; 
+            buf->cursor++;
+            buf->parsedLen++;
+            if(*buf->cursor == '\n') {
+                buf->cursor++; buf->parsedLen++;
+            }
+            break;
+        }
+        else {
+            buf->cursor++;
+            argLen++;
+        }
+    }
+    buf->parseFlag = 0;
+    buf->argCnt = argCnt;
+    buf->parseMessageSeq++;
+    return argCnt;
+} 
 static int catchOneMessagefromBuffer(buffer *buf) {
     int messageLen = 0, parseRemainlen = 0;
     buf->messageBeginpos = buf->rBuf + buf->parsedLen;
@@ -120,54 +168,6 @@ static int catchOneMessagefromBuffer(buffer *buf) {
     return parseOneMessage(buf);
 }
 
-int parseOneMessage(buffer *buf) {
-    int argLen = 0, preArgLen = 0;
-    int separLen = 0;
-    int argCnt = 0;
-
-    buf->argBeginpos = buf->cursor;
-    while(buf->parsedLen != buf->readDatalen && buf->cursor) {
-        if((*buf->cursor == '\t') && argLen == 0) {
-            buf->cursor++;
-            preArgLen++;
-        }
-        else if((*buf->cursor == '\t') && argLen != 0) {
-            buf->argBeginpos += (preArgLen + separLen);
-            buf->parsedLen += (preArgLen + separLen);
-            memset(buf->argv[argCnt], '\0', ARGUMENTCNT);
-            memcpy(buf->argv[argCnt], buf->argBeginpos, argLen);
-            buf->cursor++; 
-            preArgLen = argLen;
-            argLen = 0;
-            separLen = 1;
-            argCnt++;
-            if(argCnt > 3) {
-                buf->parseFlag = -1;
-                break;
-            }
-        }
-        else if(*buf->cursor == '!') {
-            buf->argBeginpos += (preArgLen + separLen);
-            buf->parsedLen += (preArgLen + separLen);
-            memcpy(buf->argv[argCnt], buf->argBeginpos, argLen);
-            argCnt++; 
-            buf->cursor++;
-            buf->parsedLen++;
-            if(*buf->cursor == '\n') {
-                buf->cursor++; buf->parsedLen++;
-            }
-            break;
-        }
-        else {
-            buf->cursor++;
-            argLen++;
-        }
-    }
-    buf->parseFlag = 0;
-    buf->argCnt = argCnt;
-    buf->parseMessageSeq++;
-    return argCnt;
-} 
 
 int decod(buffer *buf) {
     int commandCnt = 0;

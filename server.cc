@@ -8,9 +8,15 @@
 * Author: Liyinlong (yinlong.lee at hotmail.com)
 */
 
-#include <stdio.h>
+//#include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <cstdio>
+#include <string>
+#include <iostream>
+#include "rocksdb/db.h"
+#include "rocksdb/slice.h"
+#include "rocksdb/options.h"
 #include "buffer.h"
 #include "event.h"
 #include "aepoll.h"
@@ -23,11 +29,13 @@
 #include "log.h"
 #include "threads.h"
 
+using namespace std;
+using namespace rocksdb;
 
 int serverport = PORT;
 int listenfd = 0;
 
-dict *db[THREADCNT] = {NULL};
+//dict *db[THREADCNT] = {NULL};
 eventLoop *globalEloop[THREADCNT] = {NULL};
 connTree *globalconnTree[THREADCNT] = {NULL};
 pthread_mutex_t lock[THREADCNT];
@@ -36,11 +44,34 @@ int eloopid = 0;
 
 pthread_mutex_t connLock[THREADCNT];
 
+DB* db;
 
 /* these global variables are exposed to all threads */
 /* they are all immutable */
 extern dictType dDictType;
 
+void initDB() {
+    std::string kDBPath = "./rocksdb";
+    Options options;
+    // Optimize RocksDB. This is the easiest way to get RocksDB to perform well
+    options.IncreaseParallelism();
+    options.OptimizeLevelStyleCompaction();
+    // create the DB if it's not already present
+    options.create_if_missing = true;
+    // open DB
+    Status s = DB::Open(options, kDBPath, &db);
+    assert(s.ok());
+    // Put key-value
+    s = db->Put(WriteOptions(), "key", "12345678");
+    assert(s.ok());
+    std::string value;
+    // get value
+    s = db->Get(ReadOptions(), "key", &value);
+    assert(s.ok());
+    //  assert(value == "value");
+    cout<<"value is:"<<value<<endl;
+//   delete db;
+}
 
 int main() {
     int i = 0, j = 0;
@@ -49,10 +80,14 @@ int main() {
     listenfd = tcpServer(NULL,serverport , NULL);   // init for the global variable listenfd,
                                                     // the first NULL refers to server->neterr,
     writeLog(1,"starting server...%s","server started.");
-    logFile("starting server...", 0);
+//    logFile("starting server...", 0);
+
+    initDB();
+/*
     for(i = 0; i < THREADCNT; i++) {
         db[i] = dictCreate(&dDictType, NULL);           //init global variable db[i]
     }
+*/
     for(i = 0;i<THREADCNT;i++) {
         globalEloop[i] = createEventLoop();
         aePollCreate(globalEloop[i]) == -1;

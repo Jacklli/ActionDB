@@ -27,7 +27,7 @@
 extern int serverport;
 extern int listenfd;
 
-extern dict *db[THREADCNT];
+//extern dict *db[THREADCNT];
 extern eventLoop *globalEloop[THREADCNT];
 extern connTree *globalconnTree[THREADCNT];
 extern pthread_mutex_t lock[THREADCNT];

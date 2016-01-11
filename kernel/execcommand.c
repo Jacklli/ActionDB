@@ -31,6 +31,7 @@ int chrtoint(char *str) {
 
 static int setCommand(char *key, valObject *val) {
     int ret = -1,dbindex = -1;
+/*
     dbindex = chrtoint(key)%(THREADCNT);
     pthread_mutex_lock(&lock[dbindex]);
     ret = dictAdd(db[dbindex], key, val);
@@ -39,14 +40,19 @@ static int setCommand(char *key, valObject *val) {
         return ret;
     else
         return -1;
+*/
+    return 1;
 }
 static valObject *lookupKey(dict *db, char *key) {
+/*
     dictEntry *de = NULL;
     de = dictFind(db,key);
     if(de)
         return de->val;
     else
         return NULL;
+*/
+    return NULL;
 }
 
 int execSetCommand(char (*argv)[ARGUMENTCNT]) {

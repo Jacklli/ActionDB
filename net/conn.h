@@ -19,6 +19,8 @@
 #include "object.h"
 #include "dict.h"
 
+int replay(const char *buf, int fd);
+
 typedef struct conn {
     int fd;
     buffer *buf;

@@ -8,17 +8,19 @@
 * Author: Liyinlong (yinlong.lee at hotmail.com)
 */
 
+#include <unistd.h>
+#include "aepoll.h"
 #include "timer.h"
 #include "log.h"
 #include "server.h"
 #include "dict.h"
 
-extern dict *db[THREADCNT];
+//extern dict *db[THREADCNT];
 
 int timerCallback(connTree *tree, struct eventLoop *eLoop, int fd,int mask) {
     int i = 0, keys = 0;
     long long tmp;
-    read(fd, tmp, sizeof(tmp));
+//    read(fd, tmp, sizeof(tmp));
     writeLog(1, "timerCallback!");
     return 1;
 }
