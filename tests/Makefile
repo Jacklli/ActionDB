@@ -1,3 +1,4 @@
+#include build_config.mk
 CFLAGS += -g -I ../net/ -I ../db/ -I ../log/ -I ../ -I ../log/ -I ../rocksdb-3.9/include/rocksdb/
 test_rbtree.o: ../net/rbtree.h ../net/rbtree.c test_rbtree.c
 	gcc $(CFLAGS) -o test_rbtree.o ../net/rbtree.c test_rbtree.c
@@ -7,7 +8,7 @@ testperf.o: testperf.c
 	gcc $(CFLAGS) -g -o testperf.o testperf.c -lpthread
 testlog.o: ../log/log.c ../log/log.h testlog.c
 	gcc $(CFLAGS) -g -o testlog.o ../log/log.c testlog.c
-testorckdb.o: testrocksdb.cc
-	g++ $(CFLAGS) -g -o testorckdb.o testrocksdb.cc
+simple_example: simple_example.cc
+	g++  simple_example.cc -osimple_example ../rocksdb-3.9/librocksdb.a -I../include -O2 -std=c++11 -lpthread -lrt -lsnappy -lgflags -lz -lbz2 -std=c++11  -DROCKSDB_PLATFORM_POSIX  -DOS_LINUX -fno-builtin-memcmp -DROCKSDB_FALLOCATE_PRESENT -DSNAPPY -DGFLAGS=google -DZLIB -DBZIP2
 clean:
-	rm -rf *.o
+	rm -rf *.o simple_example
