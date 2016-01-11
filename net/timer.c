@@ -13,9 +13,7 @@
 #include "timer.h"
 #include "log.h"
 #include "server.h"
-#include "dict.h"
 
-//extern dict *db[THREADCNT];
 
 int timerCallback(connTree *tree, struct eventLoop *eLoop, int fd,int mask) {
     int i = 0, keys = 0;

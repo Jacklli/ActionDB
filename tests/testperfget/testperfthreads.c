@@ -87,18 +87,16 @@ int main() {
     gettimeofday(&tstart,NULL);
 
 printf("\n\n");
-printf("start get test with 15 threads.\n");
+printf("start get test with 1 threads.\n");
 
     args *myarg = NULL;
-    for(m = 0; m < 15; m++) {
+    for(m = 0; m < 1; m++) {
         myarg = malloc(sizeof(*myarg));
-        myarg->arg1 = m*1000000;
-        myarg->arg2 = (m+1)*1000000;
-//        printf("myarg->arg1 is:%d\n",myarg->arg1);
-//        printf("myarg->arg2 is:%d\n",myarg->arg2);
+        myarg->arg1 = m*100;
+        myarg->arg2 = (m+1)*100;
         pthread_create(&tid[m], NULL, doTest, (void *)myarg);
     }
-    for(i = 0;i<15;i++) {
+    for(i = 0;i<1;i++) {
         pthread_join(tid[i], NULL);
     }
     gettimeofday(&tend,NULL);

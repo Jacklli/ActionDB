@@ -19,7 +19,6 @@
 #include "tcpsocket.h"
 #include "conn.h"
 #include "rbtree.h"
-#include "dict.h"
 #include "log.h"
 #include "threads.h"
 
@@ -37,7 +36,7 @@ Server *initworkThread() {
 
     //init conection tree, each thread has its own connection ree
     pthread_mutex_lock(&eloopidLock);
-    printf("eloopid for current thread is:%d\n",eloopid);
+//    printf("eloopid for current thread is:%d\n",eloopid);
     server->eLoop = globalEloop[eloopid];
     server->tree = globalconnTree[eloopid];
     eloopid++;

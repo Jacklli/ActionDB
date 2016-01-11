@@ -15,7 +15,6 @@
 #include "event.h"
 #include "buffer.h"
 #include "conn.h"
-#include "dict.h"
 #include "object.h"
 
 /* refers to your CPU count */
@@ -27,7 +26,6 @@
 extern int serverport;
 extern int listenfd;
 
-//extern dict *db[THREADCNT];
 extern eventLoop *globalEloop[THREADCNT];
 extern connTree *globalconnTree[THREADCNT];
 extern pthread_mutex_t lock[THREADCNT];

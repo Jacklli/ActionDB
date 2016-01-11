@@ -28,7 +28,6 @@
 #include "tcpsocket.h"
 #include "conn.h"
 #include "execcommand.h"
-#include "dict.h"
 #include "server.h"
 #include "log.h"
 

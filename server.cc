@@ -8,7 +8,6 @@
 * Author: Liyinlong (yinlong.lee at hotmail.com)
 */
 
-//#include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
 #include <cstdio>
@@ -25,7 +24,6 @@
 #include "conn.h"
 #include "rbtree.h"
 #include "server.h"
-#include "dict.h"
 #include "log.h"
 #include "threads.h"
 
@@ -35,7 +33,6 @@ using namespace rocksdb;
 int serverport = PORT;
 int listenfd = 0;
 
-//dict *db[THREADCNT] = {NULL};
 eventLoop *globalEloop[THREADCNT] = {NULL};
 connTree *globalconnTree[THREADCNT] = {NULL};
 pthread_mutex_t lock[THREADCNT];
@@ -48,7 +45,7 @@ DB* db;
 
 /* these global variables are exposed to all threads */
 /* they are all immutable */
-extern dictType dDictType;
+//extern dictType dDictType;
 
 void initDB() {
     std::string kDBPath = "./rocksdb";
@@ -64,13 +61,6 @@ void initDB() {
     // Put key-value
     s = db->Put(WriteOptions(), "key", "12345678");
     assert(s.ok());
-    std::string value;
-    // get value
-    s = db->Get(ReadOptions(), "key", &value);
-    assert(s.ok());
-    //  assert(value == "value");
-    cout<<"value is:"<<value<<endl;
-//   delete db;
 }
 
 int main() {

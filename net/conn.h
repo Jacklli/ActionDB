@@ -17,17 +17,13 @@
 #include "codec.h"
 #include "rbtree.h"
 #include "object.h"
-#include "dict.h"
 
 int replay(const char *buf, int fd);
 
 typedef struct conn {
     int fd;
     buffer *buf;
-//    char **argv;
-//    int argvCnt;
     int commandCnt;
-    dict *db;
     time_t ctime;           /* connection creation time */
     time_t lastinteraction; /* time of the last interaction, used for timeout */
     int (*encod)(buffer *buf, char **argv);

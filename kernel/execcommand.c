@@ -13,10 +13,10 @@
 #include <malloc.h>
 #include <string.h>
 #include "object.h"
-#include "dict.h"
 #include "execcommand.h"
 #include "server.h"
 #include "log.h"
+#include "ds.h"
 
 int chrtoint(char *str) {
     int size = 0;
@@ -29,36 +29,11 @@ int chrtoint(char *str) {
     return intval;
 }
 
-static int setCommand(char *key, valObject *val) {
-    int ret = -1,dbindex = -1;
-/*
-    dbindex = chrtoint(key)%(THREADCNT);
-    pthread_mutex_lock(&lock[dbindex]);
-    ret = dictAdd(db[dbindex], key, val);
-    pthread_mutex_unlock(&lock[dbindex]);
-    if(ret < 0)
-        return ret;
-    else
-        return -1;
-*/
-    return 1;
-}
-static valObject *lookupKey(dict *db, char *key) {
-/*
-    dictEntry *de = NULL;
-    de = dictFind(db,key);
-    if(de)
-        return de->val;
-    else
-        return NULL;
-*/
-    return NULL;
-}
 
 int execSetCommand(char (*argv)[ARGUMENTCNT]) {
-//    valObject *val = createObj(argv[2]);
+    valObject *val = createObj(argv[2]);
 //    return setCommand(argv[1], val);
-    return 1;
+    return rocksSet(argv[1],val->ptr);
 }
 valObject *execGetCommand(char (*argv)[ARGUMENTCNT]) {
 //    int dbindex = -1;
@@ -66,10 +41,11 @@ valObject *execGetCommand(char (*argv)[ARGUMENTCNT]) {
 //    dbindex = chrtoint(argv[1])%(THREADCNT);
 //    val = lookupKey(db[dbindex], argv[1]);
 //    return val;
+    rocksGet(argv[1]);   
     return NULL;
 }
 
-void execShutdownCommand(dict *db) {
+void execShutdownCommand() {
 //    writeLog(1, "start to clear db...");
 //    dictRelease(db);
 //    writeLog(1, "db cleared...");
