@@ -4,11 +4,13 @@
 // of patent rights can be found in the PATENTS file in the same directory.
 #include <cstdio>
 #include <string>
+#include <iostream>
 
 #include "rocksdb/db.h"
 #include "rocksdb/slice.h"
 #include "rocksdb/options.h"
 
+using namespace std;
 using namespace rocksdb;
 
 std::string kDBPath = "/tmp/rocksdb_simple_example";
@@ -27,13 +29,15 @@ int main() {
   assert(s.ok());
 
   // Put key-value
-  s = db->Put(WriteOptions(), "key", "value");
+  s = db->Put(WriteOptions(), "key", "12345678");
   assert(s.ok());
   std::string value;
   // get value
   s = db->Get(ReadOptions(), "key", &value);
   assert(s.ok());
-  assert(value == "value");
+//  assert(value == "value");
+
+  cout<<"value is:"<<value<<endl;
 
   delete db;
 
