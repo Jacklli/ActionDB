@@ -8,8 +8,8 @@
 * Author: Liyinlong (yinlong.lee at hotmail.com)
 */
 
-#ifndef __OBJECT_H__
-#define __OBJECT_H__
+#ifndef __DS_H__
+#define __DS_H__
 
 int rocksSet(char *key, char *val);
 int rocksGet(char *key);

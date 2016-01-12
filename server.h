@@ -32,7 +32,8 @@ extern pthread_mutex_t lock[THREADCNT];
 extern pthread_mutex_t eloopidLock;
 extern int eloopid;
 
-extern pthread_mutex_t connLock[THREADCNT];
+extern pthread_mutex_t connLock;
+extern pthread_mutex_t dbLock;
 
 typedef struct Server {
     int listenfd;

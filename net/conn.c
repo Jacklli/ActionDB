@@ -76,23 +76,26 @@ conn *newConn(int fd, connTree *tree) {
 int freeConn(int fd, connTree *tree) {
     rb_node_t *nd = NULL;
     conn *connection = NULL;
+    pthread_mutex_lock(&connLock);
     if(tree->connCnt > 0 && (nd = rb_search(fd, tree->root))) {
         connection = (conn *)nd->data;
         if(!connection) {
             printf("free connection error!\n");
+            pthread_mutex_unlock(&connLock);
             return -1;
         }
         tree->connCnt -= 1;
         if(!(tree->root = rb_erase(fd, tree->root)) && tree->connCnt != 0) {
             printf("rb_erase connection node failed!\n");
+            pthread_mutex_unlock(&connLock);
             return -1;
         }
         free(connection->buf);
         free(connection);
         if(tree->connCnt == 0) tree->root = NULL;
         writeLog(1, "connection fd %d closed.", fd);
-        return 1;
     }
+    pthread_mutex_unlock(&connLock);
     return 1;
 }
 int freeConns(connTree *tree) {

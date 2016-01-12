@@ -26,13 +26,14 @@ extern DB* db;
 
 int rocksSet(char *key, char *val) {
     Status s;
+    std::string value;
+    pthread_mutex_lock(&dbLock);
     s = db->Put(WriteOptions(), key, val);
     assert(s.ok());
-    std::string value;
     s = db->Get(ReadOptions(), key, &value);
     assert(s.ok());
-    cout<<"key is:"<<key<<endl;
-    cout<<"value is:"<<value<<endl;
+//    cout<<"value is:"<<value<<endl;
+    pthread_mutex_unlock(&dbLock);
     return 1;
 }
 

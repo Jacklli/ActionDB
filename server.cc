@@ -39,7 +39,8 @@ pthread_mutex_t lock[THREADCNT];
 pthread_mutex_t eloopidLock;
 int eloopid = 0;
 
-pthread_mutex_t connLock[THREADCNT];
+pthread_mutex_t connLock;
+pthread_mutex_t dbLock;
 
 DB* db;
 

@@ -127,13 +127,15 @@ int i = 0,minconns = 0,minconnsindex = 0;
 
     if ((connfd = tcpAccept(err, fd, port)) > 0) {
         writeLog(1, "new connection forked from listenfd %d, connfd is %d, processed by thread %lu",fd, connfd, pthread_self());
-/*
-        for(i = 1,minconnsindex; i < THREADCNT; i++) {
-            if((globalconnTree[i] && globalconnTree[i-1] &&  \
-                globalconnTree[i]->connCnt < globalconnTree[i-1]->connCnt) || !globalconnTree[i-1])
-                minconnsindex = i;
+        if(THREADCNT > 1) {
+            for(i = 1,minconnsindex; i < THREADCNT; i++) {
+                if((globalconnTree[i] && globalconnTree[i-1] &&  \
+                    globalconnTree[i]->connCnt < globalconnTree[i-1]->connCnt) || !globalconnTree[i-1])
+                    minconnsindex = i;
+            }
+        } else {
+           minconnsindex = 0;
         }
-*/
         if (createFileEvent(globalEloop[minconnsindex], connfd, READABLE, tcpReadCallback) == -1) return -1;
         if (aePollAddEvent(globalEloop[minconnsindex], connfd, READABLE) == -1) {
             writeLog(1,"%s" "add tcpReadCallback failed!");
