@@ -56,7 +56,6 @@ static int tcpRead(conn *connection, int fd, buffer *buf) {
             return -1;
         }
         connection->commandCnt = connection->decod(connection->buf);
-//        connection->db = db[atoi(connection->buf->argv[1])%THREADCNT];
         while(connection->buf->parseFlag != 1 && connection->buf->parseFlag != -1) {     
             if(connection->buf->argv[0] && strcmp(connection->buf->argv[0], "set") ==0 ) {
                 execSetCommand(connection->buf->argv);
@@ -64,22 +63,13 @@ static int tcpRead(conn *connection, int fd, buffer *buf) {
             }
             else if(connection->buf->argv[0] && strcmp(connection->buf->argv[0], "get") == 0) {
                 obj = execGetCommand(connection->buf->argv);
-/*
                 if(obj && obj->ptr)
                     replay(obj->ptr, fd);
                 else
                     replay("not found.\n", fd);
-*/
             }
             else if(connection->buf->argv[0] && strcmp(connection->buf->argv[0], "shutdown") == 0) {
-                int i = 0;
-                for(i = 0;i < THREADCNT; i++) {
-/*
-                    if(db[i]) {
-                        execShutdownCommand(db[i]);
-                    }
-*/
-                }
+                execShutdownCommand();
             }
             connection->commandCnt = connection->decod(connection->buf);
         }
@@ -137,11 +127,13 @@ int i = 0,minconns = 0,minconnsindex = 0;
 
     if ((connfd = tcpAccept(err, fd, port)) > 0) {
         writeLog(1, "new connection forked from listenfd %d, connfd is %d, processed by thread %lu",fd, connfd, pthread_self());
+/*
         for(i = 1,minconnsindex; i < THREADCNT; i++) {
             if((globalconnTree[i] && globalconnTree[i-1] &&  \
                 globalconnTree[i]->connCnt < globalconnTree[i-1]->connCnt) || !globalconnTree[i-1])
                 minconnsindex = i;
         }
+*/
         if (createFileEvent(globalEloop[minconnsindex], connfd, READABLE, tcpReadCallback) == -1) return -1;
         if (aePollAddEvent(globalEloop[minconnsindex], connfd, READABLE) == -1) {
             writeLog(1,"%s" "add tcpReadCallback failed!");

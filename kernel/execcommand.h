@@ -15,5 +15,6 @@
 
 int execSetCommand(char (*argv)[ARGUMENTCNT]);
 valObject *execGetCommand(char (*argv)[ARGUMENTCNT]);
+void execShutdownCommand();
 
 #endif

@@ -38,7 +38,7 @@ void *doTest(void *arg) {
     int loopcnt = 0;
     int flags = 0;
 
-char *errmsg = NULL;
+    char *errmsg = NULL;
     char command_set[50] = "";
     char command_set_key[20] = "";
     char command_set_val[20] = "";
@@ -80,6 +80,9 @@ char *errmsg = NULL;
         memset(readBuf,'\0',20);
         read(connfd,readBuf,20);
     }
+    strcpy(command_set,"shutdown");
+    ptr = makeCommand(command_set);
+    write(connfd, ptr, strlen(ptr));
     close(connfd);
 }
 int main() {

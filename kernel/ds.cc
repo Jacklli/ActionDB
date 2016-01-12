@@ -7,6 +7,7 @@
 #include "rocksdb/slice.h"
 #include "rocksdb/options.h"
 #include "object.h"
+#include "server.h"
 
 using namespace std;
 using namespace rocksdb;
@@ -32,4 +33,14 @@ int rocksGet(char *key) {
     assert(s.ok());
     cout<<"value is:"<<value<<endl;
     return 1;
+}
+
+void rocksShutdown() {
+    int i = 0;
+    delete db;
+    for(i = 0; i< THREADCNT; i++) {
+        freeConns(globalconnTree[i]);   
+    }
+    cout<<"rocksDB shutdown success!"<<endl;
+    exit(1);
 }

@@ -36,8 +36,9 @@
 int repairLastCorruptMessage(buffer *buf, int corruptMessagelen) {
     char *ptr = NULL;
     buf->corruptMessagelen = corruptMessagelen;
-
-    if(!(ptr = memset(buf->rBuf, '\0', buf->rBuflen-corruptMessagelen))) {
+    void *vptr = (void *)buf->rBuf;
+    
+    if(!(ptr = memset(vptr, '\0', buf->rBuflen-corruptMessagelen))) {
         writeLog(1, "%s", "memset error!\n");
         return -1;
     }

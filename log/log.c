@@ -20,7 +20,7 @@ void writeLog(int level, const char *fmt, ...) {
 
     va_start(ap, fmt);
     if (level >= 0) {
-        char *c = ".-";
+        const char *c = ".-";
         char buf[64];
         time_t now;
 
@@ -36,7 +36,7 @@ void writeLog(int level, const char *fmt, ...) {
 
 void logFile(char *msg, int size) {
     int ret = 0;
-    char *name = "./server.log";
+    const char *name = "./server.log";
     FILE *fp = NULL;
     if(!(fp = fopen(name, "a+"))) {
         writeLog(1, "open log file error!");

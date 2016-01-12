@@ -18,6 +18,7 @@
 #include "log.h"
 #include "ds.h"
 
+
 int chrtoint(char *str) {
     int size = 0;
     unsigned int intval = 0;
@@ -32,28 +33,13 @@ int chrtoint(char *str) {
 
 int execSetCommand(char (*argv)[ARGUMENTCNT]) {
     valObject *val = createObj(argv[2]);
-//    return setCommand(argv[1], val);
     return rocksSet(argv[1],val->ptr);
 }
 valObject *execGetCommand(char (*argv)[ARGUMENTCNT]) {
-//    int dbindex = -1;
-//    valObject *val;
-//    dbindex = chrtoint(argv[1])%(THREADCNT);
-//    val = lookupKey(db[dbindex], argv[1]);
-//    return val;
     rocksGet(argv[1]);   
     return NULL;
 }
 
 void execShutdownCommand() {
-//    writeLog(1, "start to clear db...");
-//    dictRelease(db);
-//    writeLog(1, "db cleared...");
-/*
-*  TODO
-*  Implement all connections free here.
-*/
-//    sleep(5);
-//    writeLog(1, "start to shutdown...");
-//    exit(1);
+    rocksShutdown();    
 }

@@ -43,5 +43,6 @@ typedef struct connTree {
 
 conn *newConn(int fd, connTree *tree);
 int freeConn(int fd, connTree *tree);
+int freeConns(connTree *tree);
 
 #endif

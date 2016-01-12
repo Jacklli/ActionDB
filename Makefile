@@ -6,8 +6,8 @@ BODY = server.cc ./net/event.c ./net/aepoll.c ./net/tcpsocket.c \
 #server: ./net/event.o ./net/aepoll.o ./net/tcpsocket.o ./net/conn.o ./net/timer.o ./net/codec.o ./kernel/dict.o ./kernel/object.o ./kernel/execcommand.o ./log/log.o ./threads/threads.o server.c server.h
 	#gcc $(CFLAGS) -g -o server $(BODY) -lpthread
 server: $(HEADER) $(BODY) 
-	g++ $(CFLAGS) -g  -o server $(BODY) ./rocksdb-3.9/librocksdb.a -I../include -O2 -std=c++11 -lpthread -lrt -lsnappy -lgflags -lz -lbz2 -std=c++11  -DROCKSDB_PLATFORM_POSIX  -DOS_LINUX -fno-builtin-memcmp -DROCKSDB_FALLOCATE_PRESENT -DSNAPPY -DGFLAGS=google -DZLIB -DBZIP2 -fpermissive
+	g++ $(CFLAGS) -g  -o server $(BODY) ./rocksdb-3.9/librocksdb.a -I../include -lpthread -std=c++11 -lrt -lsnappy -lgflags -lz -lbz2 -DROCKSDB_PLATFORM_POSIX  -DOS_LINUX -fno-builtin-memcmp -DROCKSDB_FALLOCATE_PRESENT -DSNAPPY -DGFLAGS=google -DZLIB -DBZIP2 -fpermissive -w 
 clean:
-	rm -rf *.o net/*.o kernel/*.o log/*.o threads/*.o *.log core* server.log.* server testperfget/*.o testperfset/*.o
+	rm -rf *.o net/*.o kernel/*.o log/*.o threads/*.o *.log core* server.log.* server tests/*.o tests/testperfget/*.o tests/testperfset/*.o
 corev:
 	rm -rf core*

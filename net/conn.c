@@ -95,3 +95,9 @@ int freeConn(int fd, connTree *tree) {
     }
     return 1;
 }
+int freeConns(connTree *tree) {
+    while(tree->connCnt > 0) {
+        freeConn(((conn *)(tree->root->data))->fd, tree);
+    }
+    return 1;
+}
