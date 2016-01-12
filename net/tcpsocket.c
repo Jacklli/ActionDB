@@ -122,8 +122,7 @@ int tcpAcceptCallback(connTree *tree, eventLoop *eLoop, int fd, int mask) {
     conn *connection = NULL;
     rb_node_t* root;
 
-int i = 0,minconns = 0,minconnsindex = 0;
-
+    int i = 0,minconns = 0,minconnsindex = 0;
 
     if ((connfd = tcpAccept(err, fd, port)) > 0) {
         writeLog(1, "new connection forked from listenfd %d, connfd is %d, processed by thread %lu",fd, connfd, pthread_self());
